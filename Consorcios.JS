@@ -1,5 +1,7 @@
+//  Cargar los datos guardados en localStorage o inicia con un objeto vacío
 let consorcios = JSON.parse(localStorage.getItem("consorciosData")) || {};
 
+//  Obtener referencias a los elementos del DOM
 const consorcioInput = document.getElementById("consorcioNombre");
 const agregarConsorcioBtn = document.getElementById("agregarConsorcio");
 const listaConsorcios = document.getElementById("listaConsorcios");
@@ -10,14 +12,17 @@ const propEmail = document.getElementById("propEmail");
 const agregarPropBtn = document.getElementById("agregarProp");
 const listaPropietarios = document.getElementById("listaPropietarios");
 
+//  Variables de control 
 let modoEdicion = false;
 let consorcioSeleccionado = "";
 let propietarioEnEdicion = null;
 
+//  Función para guardar el objeto "consorcios" en localStorage
 function actualizarLocalStorage() {
   localStorage.setItem("consorciosData", JSON.stringify(consorcios));
 }
 
+//  Función para actualizar el selector de consorcios en el DOM
 function actualizarListaConsorcios() {
   listaConsorcios.innerHTML = '<option value="">-- Selecciona un consorcio --</option>';
   Object.keys(consorcios).forEach(nombre => {
@@ -28,23 +33,26 @@ function actualizarListaConsorcios() {
   });
 }
 
+//  Evento para agregar un nuevo consorcio
 agregarConsorcioBtn.addEventListener("click", () => {
   const nombre = consorcioInput.value.trim();
   if (nombre && !consorcios[nombre]) {
-    consorcios[nombre] = [];
-    consorcioInput.value = "";
-    actualizarListaConsorcios();
-    actualizarLocalStorage();
+    consorcios[nombre] = []; 
+    consorcioInput.value = ""; 
+    actualizarListaConsorcios(); 
+    actualizarLocalStorage(); 
   }
 });
 
+//  Evento que detecta selección de consorcio en el selector
 listaConsorcios.addEventListener("change", () => {
   consorcioSeleccionado = listaConsorcios.value;
-  mostrarPropietarios();
+  mostrarPropietarios(); // Muestra los propietarios según el consorcio seleccionado
 });
 
+//  Muestra los propietarios del consorcio seleccionado
 function mostrarPropietarios() {
-  listaPropietarios.innerHTML = "";
+  listaPropietarios.innerHTML = ""; 
   if (!consorcioSeleccionado || !consorcios[consorcioSeleccionado]) return;
 
   consorcios[consorcioSeleccionado].forEach((prop, index) => {
@@ -52,12 +60,14 @@ function mostrarPropietarios() {
     li.className = "propietario";
     li.textContent = `${prop.nombre} - ${prop.tel} - ${prop.email}`;
 
+    //  Crear botones de editar y eliminar para cada propietario
     const acciones = document.createElement("div");
     acciones.className = "acciones";
 
     const editarBtn = document.createElement("button");
     editarBtn.textContent = "Editar";
     editarBtn.addEventListener("click", () => {
+      // Cargar los datos en los inputs para edición
       propNombre.value = prop.nombre;
       propTel.value = prop.tel;
       propEmail.value = prop.email;
@@ -69,6 +79,7 @@ function mostrarPropietarios() {
     const eliminarBtn = document.createElement("button");
     eliminarBtn.textContent = "Eliminar";
     eliminarBtn.addEventListener("click", () => {
+      // Eliminar el propietario
       consorcios[consorcioSeleccionado].splice(index, 1);
       actualizarLocalStorage();
       mostrarPropietarios();
@@ -81,6 +92,7 @@ function mostrarPropietarios() {
   });
 }
 
+//  Evento para agregar o editar propietarios
 agregarPropBtn.addEventListener("click", () => {
   if (!consorcioSeleccionado) return;
 
@@ -91,14 +103,17 @@ agregarPropBtn.addEventListener("click", () => {
   if (!nombre || !tel || !email) return;
 
   if (modoEdicion) {
+    //  Edita los datos del propietario 
     consorcios[consorcioSeleccionado][propietarioEnEdicion] = { nombre, tel, email };
     agregarPropBtn.textContent = "Agregar Propietario";
     modoEdicion = false;
     propietarioEnEdicion = null;
   } else {
+    //  Agregar nuevo propietario
     consorcios[consorcioSeleccionado].push({ nombre, tel, email });
   }
 
+  //  Limpiar inputs
   propNombre.value = "";
   propTel.value = "";
   propEmail.value = "";
@@ -107,5 +122,5 @@ agregarPropBtn.addEventListener("click", () => {
   mostrarPropietarios();
 });
 
-// Inicializar
+//  Inicializar el selector con los datos guardados
 actualizarListaConsorcios();
