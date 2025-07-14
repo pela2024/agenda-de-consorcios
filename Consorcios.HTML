@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestión de Consorcios</title>
+  <link rel="stylesheet" href="./estyle.css">
+</head>
+<body>
+  <h2>Nuevo Consorcio</h2>
+  <input type="text" id="consorcioNombre" placeholder="Nombre del consorcio" />
+  <button id="agregarConsorcio">Agregar Consorcio</button>
+ 
+
+  <h2>Propietarios</h2>
+  <select id="listaConsorcios">
+    <option value="">-- Selecciona un consorcio --</option>
+  </select>
+  <br />
+  <input type="text" id="propNombre" placeholder="Nombre propietario" />
+  <input type="text" id="propTel" placeholder="Teléfono" />
+  <input type="email" id="propEmail" placeholder="Email" />
+  <button id="agregarProp">Agregar Propietario</button>
+  
+
+  <h3>Listado de Propietarios</h3>
+  <ul id="listaPropietarios"></ul>
+
+  <script src="./Consorcios.JS"></script>
+</body>
+</html>
